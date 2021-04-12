@@ -112,12 +112,14 @@ func SendNFT(data Payload, uri URI) {
   Current implemented functions
   - getAddress
   - CreateUser
-  - CreateAddress
+  - CreateAddress{Mnemonic,Request}
 */
-// Get X-Chain Address
+// Get X-Chain Adress from mnemonic seed (requires cchain import)
 // TODO: Pass string as string and convert to []byte
-func GetAddress(data Payload, uri URI, seed []byte) *bip32.Key {
+func GetAddressMnemonic(seed []byte) *bip32.Key {
   if (seed != nil) {
+    // Refer to 
+    // https://github.com/ava-labs/avax-js-cli-tools/blob/3e3f714e4227aca83dc3978fcb6a4fd698e09065/address_gen.js#L60
     if (bip39.IsMnemonicValid(string(seed[:]))) {
       masterKey, _ := bip32.NewMasterKey(seed)
       publicKey := masterKey.PublicKey()
@@ -125,7 +127,13 @@ func GetAddress(data Payload, uri URI, seed []byte) *bip32.Key {
     }
   }
   return nil
-  // TODO: Get address from user password combination
+}
+
+// Get address from user password combination
+func GetAddressRequest(data Payload, uri URI) string {
+  // TODO: Recreate payload and send
+
+  return ""
 }
 
 // CreateUser function
