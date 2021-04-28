@@ -1,5 +1,5 @@
 # GoValanache
-A SDK for avalanche written in go.
+A SDK for avalanche written in go. This project has the goal of mirror [go-web3](https://github.com/umbracle/go-web3)
 
 ## Requirements
 - bzr
