@@ -1,14 +1,18 @@
 package govalanche
 
 import (
-	"log"
-  "net/http"	"bytes"
+	"bytes"
 	"encoding/json"
+	"log"
+	"net/http"
+
 	"github.com/tyler-smith/go-bip32"
 	"github.com/tyler-smith/go-bip39"
-	"net/http"
 )
 
+/*
+	Function Specific Payloads
+*/
 type Payload struct {
 	Jsonrpc string `json:"jsonrpc"`
 	Method  string `json:"method"`
@@ -16,24 +20,30 @@ type Payload struct {
 	ID      int    `json:"id"`
 }
 
-type Mintersets struct {
-	Minters   []string `json:"minters"`
-	Threshold int      `json:"threshold"`
+type NFTPayload struct {
+	Jsonrpc string    `json:"jsonrpc"`
+	Method  string    `json:"method"`
+	Params  nftParams `json:"params"`
+	ID      int       `json:"id"`
 }
 
-type UserParams struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+type UserPayload struct {
+	Jsonrpc string     `json:"jsonrpc"`
+	Method  string     `json:"method"`
+	Params  UserParams `json:"params"`
+	ID      int        `json:"id"`
 }
 
-type nftParams struct {
-  Name    string          `json:"name"`
-  Symbol  string          `json:"symbol"`
-  Mintersets []Mintersets `json:"minterSet"`
-	Username string         `json:"username"`
-	Password string         `json:"password"`
+type NFTUTXOPayload struct {
+	Jsonrpc string   `json:"jsonrpc"`
+	Method  string   `json:"method"`
+	Params  []string `json:"params"`
+	ID      int      `json:"id"`
 }
 
+/*
+	Function Specific Parameters for JSON RPC
+*/
 type Params struct {
 	Assetid    string       `json:"assetID"`
 	Payload    string       `json:"payload"`
@@ -47,21 +57,35 @@ type Params struct {
 	Mintersets []Mintersets `json:"minterSets"`
 }
 
-type URI struct {
-	Address string
-	Port    string
+type UserParams struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
+type nftParams struct {
+	Name       string       `json:"name"`
+	Symbol     string       `json:"symbol"`
+	Mintersets []Mintersets `json:"minterSet"`
+	Username   string       `json:"username"`
+	Password   string       `json:"password"`
+}
+
+/*
+	Helper parameters
+*/
 type Mintersets struct {
 	Minters   []string `json:"minters"`
 	Threshold int      `json:"threshold"`
 }
 
-type Addresses struct {
-  Addresses []string  `json:"addresses"`
+type URI struct {
+	Address string
+	Port    string
 }
 
-log.SetOutput(os.Stderr)
+type Addresses struct {
+	Addresses []string `json:"addresses"`
+}
 
 /*
   Utility functions
@@ -72,15 +96,24 @@ func SendRequest(uri URI, payloadBytes []byte) {
 	// req, err := http.NewRequest("POST", node, body)
 	req, err := http.NewRequest("POST", node, body)
 	if err != nil {
-	  log.Fatal(err)
+		log.Fatal(err)
 	}
 
 	req.Header.Set("Content-Type", "application/json;")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-	  log.Fatal(err)
+		log.Fatal(err)
 	}
 	defer resp.Body.Close()
+}
+
+func PayloadValidation(payloadBytes []byte) {
+
+}
+
+// helper functions to parse through multiple UTXO's on account
+func AssetUTXO() {
+
 }
 
 /*
@@ -94,22 +127,22 @@ func SendRequest(uri URI, payloadBytes []byte) {
 
 // TODO: Create an account with balance to allow users to mint NFT's
 func CreateNFTAsset(data Payload, uri URI) {
-  nftAsset := Payload{
-    Jsonrpc :data.Jsonrpc,
-    ID: data.ID,
-    Method: data.Method,
-    Params: nftParams{
-      Name: data.Params.Name,
-      Symbol: data.Params.Symbol,
-      Mintersets: data.Params.Mintersets,
-      Username: data.Params.Username,
-      Password: data.Params.password,
-    },
-  }
+	nftAsset := NFTPayload{
+		Jsonrpc: data.Jsonrpc,
+		ID:      data.ID,
+		Method:  data.Method,
+		Params: nftParams{
+			Name:       data.Params.Name,
+			Symbol:     data.Params.Symbol,
+			Mintersets: data.Params.Mintersets,
+			Username:   data.Params.Username,
+			Password:   data.Params.Password,
+		},
+	}
 
 	payloadBytes, err := json.Marshal(nftAsset)
 	if err != nil {
-	  log.Fatal(err)
+		log.Fatal(err)
 	}
 
 	SendRequest(uri, payloadBytes)
@@ -129,22 +162,20 @@ func SendNFT(data Payload, uri URI) {
 
 }
 
-func GetUTXOS(data Payload, address Addresses, uri URI) {
-  // TODO: Will need helper functions to parse through multiple UTXO's on account
-  utxo := Payload{
-    Jsonrpc := data.jsonrpc,
-    ID := data.ID,
-    Method := data.Method,
-    Params := Addresses,
-  }
+func GetUTXOS(data Payload, address []string, uri URI) {
+	utxo := NFTUTXOPayload{
+		Jsonrpc: data.Jsonrpc,
+		ID:      data.ID,
+		Method:  data.Method,
+		Params:  address,
+	}
 
 	payloadBytes, err := json.Marshal(utxo)
 	if err != nil {
-	  log.Fatal(err)
+		log.Fatal(err)
 	}
-  sendRequest(uri, utxo)
+	SendRequest(uri, payloadBytes)
 }
-
 
 /*
   User related functions
@@ -154,9 +185,10 @@ func GetUTXOS(data Payload, address Addresses, uri URI) {
   - CreateUser
   - CreateAddress
 */
+
 // Get X-Chain Address
-// TODO: Pass string as string and convert to []byte
 func GetAddress(data Payload, uri URI, seed []byte) *bip32.Key {
+	// TODO: Pass string as string and convert to []byte
 	if seed != nil {
 		if bip39.IsMnemonicValid(string(seed[:])) {
 			masterKey, _ := bip32.NewMasterKey(seed)
@@ -171,7 +203,7 @@ func GetAddress(data Payload, uri URI, seed []byte) *bip32.Key {
 // CreateUser function
 func CreateUser(data Payload, uri URI) {
 	// Create address using json request
-	user := Payload{
+	user := UserPayload{
 		Jsonrpc: data.Jsonrpc,
 		Method:  data.Method,
 		ID:      data.ID,
@@ -183,7 +215,7 @@ func CreateUser(data Payload, uri URI) {
 
 	payloadBytes, err := json.Marshal(user)
 	if err != nil {
-	  log.Fatal(err)
+		log.Fatal(err)
 	}
 	SendRequest(uri, payloadBytes)
 }
@@ -201,20 +233,10 @@ func GenerateAddress(pass string, num int) (string, *bip32.Key) {
 }
 
 // Create user Address
-func CreateAddress(data Payload, uri URI, seed []byte) *bip32.Key {
-	// TODO: Check for malformed data
-	// Derive Address from key
-	if seed != nil {
-		if bip39.IsMnemonicValid(string(seed[:])) {
-			masterKey, _ := bip32.NewMasterKey(seed)
-			publicKey := masterKey.PublicKey()
-			return publicKey
-		}
-		// TODO: Log error that mnemonic is not valid
-	}
+func CreateAddressAccount(data Payload, uri URI) {
 
 	// Create address using json request
-	user := Payload{
+	user := UserPayload{
 		Jsonrpc: data.Jsonrpc,
 		Method:  data.Method,
 		ID:      data.ID,
@@ -226,11 +248,20 @@ func CreateAddress(data Payload, uri URI, seed []byte) *bip32.Key {
 
 	payloadBytes, err := json.Marshal(user)
 	if err != nil {
-	  log.Fatal(err)
+		log.Fatal(err)
 	}
 	SendRequest(uri, payloadBytes)
-	// Return key generated from address
-	return nil
 }
 
-// Get Balance
+func CreateAddressSeed(seed []byte) *bip32.Key {
+	// TODO: Validate seed mnemonic
+	if bip39.IsMnemonicValid(string(seed[:])) {
+		masterKey, _ := bip32.NewMasterKey(seed)
+		publicKey := masterKey.PublicKey()
+		// Return key generated from address
+		return publicKey
+	} else {
+		log.Fatal("Invalid Mnemonic")
+	}
+	return nil
+}
