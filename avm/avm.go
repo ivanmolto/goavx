@@ -1,4 +1,4 @@
-package goavx
+package avm
 
 import (
 	"encoding/json"
