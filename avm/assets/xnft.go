@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
-	_ "github.com/smartpassnft/goavx/avm/utils"
+	. "github.com/smartpassnft/goavx/avm/utils"
 )
 
 type NFTPayload struct {
@@ -27,6 +27,29 @@ type nftParams struct {
 	Mintersets []Mintersets `json:"minterSet"`
 	Username   string       `json:"username"`
 	Password   string       `json:"password"`
+}
+
+// TODO: Create an account with balance to allow users to mint NFT's
+func CreateNFTAsset(data Payload, uri URI) {
+	nftAsset := NFTPayload{
+		Jsonrpc: data.Jsonrpc,
+		ID:      data.ID,
+		Method:  data.Method,
+		Params: nftParams{
+			Name:       data.Params.Name,
+			Symbol:     data.Params.Symbol,
+			Mintersets: data.Params.Mintersets,
+			Username:   data.Params.Username,
+			Password:   data.Params.Password,
+		},
+	}
+
+	payloadBytes, err := json.Marshal(nftAsset)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	SendRequest(uri, payloadBytes)
 }
 
 //Mint NFT
