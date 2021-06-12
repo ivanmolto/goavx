@@ -1,3 +1,3 @@
-module github.com/smartpassnft/goavx/assets
+module github.com/smartpassnft/goavx/avm/assets
 
 go 1.16

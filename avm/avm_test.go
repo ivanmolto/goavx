@@ -4,7 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	_ "github.com/smartpassnft/goavx/utils"
+	_ "github.com/smartpassnft/goavx/avm/assets"
+	_ "github.com/smartpassnft/goavx/avm/utils"
 	"github.com/tyler-smith/go-bip32"
 )
 

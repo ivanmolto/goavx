@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
-	_ "github.com/smartpassnft/goavx/utils"
+	_ "github.com/smartpassnft/goavx/avm/utils"
 	"github.com/tyler-smith/go-bip32"
 	"github.com/tyler-smith/go-bip39"
 )
