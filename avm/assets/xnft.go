@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
-	_ "github.com/smartpass/goavx/utils"
+	_ "github.com/smartpassnft/goavx/utils"
 )
 
 type NFTPayload struct {
