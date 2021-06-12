@@ -1,4 +1,4 @@
-package goavx
+package assets
 
 import (
 	"encoding/json"
