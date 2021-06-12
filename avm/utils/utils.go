@@ -1,4 +1,4 @@
-package goavx
+package utils
 
 import (
 	"bytes"
