@@ -1,9 +1,10 @@
-package govalanche
+package goavx
 
 import (
 	"reflect"
 	"testing"
 
+	_ "github.com/smartpassnft/goavx"
 	"github.com/tyler-smith/go-bip32"
 )
 
