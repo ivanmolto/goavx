@@ -1,13 +1,12 @@
-# GoValanache
-A SDK for avalanche written in go.
+# goavx
 
-## Requirements
-- bzr
-- golang
+A go library that facilitates interactions with the avalanche avm
 
 ## TODO
-- [ ] Add coverage for x-chain, p-chain and c-chain queries
+- [ ] Add coverage for x-chain
 - [ ] Add unit tests
 - [ ] Refactor Code
 - [ ] Add documentation
-- [ ] Test in [wasm implementation](https://github.com/golang/go/wiki/WebAssembly)
+
+
+**made with love**
