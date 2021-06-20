@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
-	. "github.com/smartpassnft/goavx/avm/utils"
+	"github.com/smartpassnft/goavx/avm/utils"
 )
 
 type NFTPayload struct {
@@ -22,15 +22,15 @@ type NFTUTXOPayload struct {
 }
 
 type nftParams struct {
-	Name       string       `json:"name"`
-	Symbol     string       `json:"symbol"`
-	Mintersets []Mintersets `json:"minterSet"`
-	Username   string       `json:"username"`
-	Password   string       `json:"password"`
+	Name       string             `json:"name"`
+	Symbol     string             `json:"symbol"`
+	Mintersets []utils.Mintersets `json:"minterSet"`
+	Username   string             `json:"username"`
+	Password   string             `json:"password"`
 }
 
 // TODO: Create an account with balance to allow users to mint NFT's
-func CreateNFTAsset(data Payload, uri URI) {
+func CreateNFTAsset(data utils.Payload, uri utils.URI) {
 	nftAsset := NFTPayload{
 		Jsonrpc: data.Jsonrpc,
 		ID:      data.ID,
@@ -49,24 +49,24 @@ func CreateNFTAsset(data Payload, uri URI) {
 		log.Fatal(err)
 	}
 
-	SendRequest(uri, payloadBytes)
+	utils.SendRequest(uri, payloadBytes)
 }
 
 //Mint NFT
-func MintNFTAsset(data Payload, uri URI) {
+func MintNFTAsset(data utils.Payload, uri utils.URI) {
 	// TODO: Check payload params for required params
 	// TODO: Form execution and call from createNFTAsset
 
 }
 
 // Send NFT
-func SendNFT(data Payload, uri URI) {
+func SendNFT(data utils.Payload, uri utils.URI) {
 	// TODO: Check payload params for required params
 	// TODO: Check if users owns NFT
 
 }
 
-func GetUTXOS(data Payload, address []string, uri URI) {
+func GetUTXOS(data utils.Payload, address []string, uri utils.URI) {
 	utxo := NFTUTXOPayload{
 		Jsonrpc: data.Jsonrpc,
 		ID:      data.ID,
@@ -78,5 +78,5 @@ func GetUTXOS(data Payload, address []string, uri URI) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	SendRequest(uri, payloadBytes)
+	utils.SendRequest(uri, payloadBytes)
 }

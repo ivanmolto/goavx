@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"log"
 
-	. "github.com/smartpassnft/goavx/avm/utils"
-	"github.com/tyler-smith/go-bip32"
-	"github.com/tyler-smith/go-bip39"
+	"github.com/smartpassnft/goavx/avm/utils"
+	bip32 "github.com/tyler-smith/go-bip32"
+	bip39 "github.com/tyler-smith/go-bip39"
 )
 
 /*
@@ -51,7 +51,7 @@ func AssetUTXO() {
 */
 
 // Get X-Chain Address
-func GetAddress(data Payload, uri URI, seed []byte) *bip32.Key {
+func GetAddress(data utils.Payload, uri utils.URI, seed []byte) *bip32.Key {
 	// TODO: Pass string as string and convert to []byte
 	if seed != nil {
 		if bip39.IsMnemonicValid(string(seed[:])) {
@@ -65,7 +65,7 @@ func GetAddress(data Payload, uri URI, seed []byte) *bip32.Key {
 }
 
 // CreateUser function
-func CreateUser(data Payload, uri URI) {
+func CreateUser(data utils.Payload, uri utils.URI) {
 	// Create address using json request
 	user := UserPayload{
 		Jsonrpc: data.Jsonrpc,
@@ -81,7 +81,7 @@ func CreateUser(data Payload, uri URI) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	SendRequest(uri, payloadBytes)
+	utils.SendRequest(uri, payloadBytes)
 }
 
 // Generate Address from mmemonic
@@ -97,7 +97,7 @@ func GenerateAddress(pass string, num int) (string, *bip32.Key) {
 }
 
 // Create user Address
-func CreateAddressAccount(data Payload, uri URI) {
+func CreateAddressAccount(data utils.Payload, uri utils.URI) {
 
 	// Create address using json request
 	user := UserPayload{
@@ -114,7 +114,7 @@ func CreateAddressAccount(data Payload, uri URI) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	SendRequest(uri, payloadBytes)
+	utils.SendRequest(uri, payloadBytes)
 }
 
 func CreateAddressSeed(seed []byte) *bip32.Key {
