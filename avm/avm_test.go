@@ -4,9 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	. "github.com/smartpassnft/goavx/avm"
-	. "github.com/smartpassnft/goavx/avm/utils"
-	"github.com/tyler-smith/go-bip32"
+	"github.com/smartpassnft/goavx/avm/utils"
+	bip32 "github.com/tyler-smith/go-bip32"
 )
 
 func TestCreateAddressSeed(t *testing.T) {
@@ -31,8 +30,8 @@ func TestCreateAddressSeed(t *testing.T) {
 
 func TestCreateAddressAccount(t *testing.T) {
 	type args struct {
-		data Payload
-		uri  URI
+		data utils.Payload
+		uri  utils.URI
 	}
 	tests := []struct {
 		name string
@@ -75,8 +74,8 @@ func TestGenerateAddress(t *testing.T) {
 
 func TestCreateUser(t *testing.T) {
 	type args struct {
-		data Payload
-		uri  URI
+		data utils.Payload
+		uri  utils.URI
 	}
 	tests := []struct {
 		name string
@@ -93,8 +92,8 @@ func TestCreateUser(t *testing.T) {
 
 func TestGetAddress(t *testing.T) {
 	type args struct {
-		data Payload
-		uri  URI
+		data utils.Payload
+		uri  utils.URI
 		seed []byte
 	}
 	tests := []struct {
@@ -115,9 +114,9 @@ func TestGetAddress(t *testing.T) {
 
 func TestGetUTXOS(t *testing.T) {
 	type args struct {
-		data    Payload
+		data    utils.Payload
 		address []string
-		uri     URI
+		uri     utils.URI
 	}
 	tests := []struct {
 		name string
@@ -127,15 +126,15 @@ func TestGetUTXOS(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			GetUTXOS(tt.args.data, tt.args.address, tt.args.uri)
+			utils.GetUTXOS(tt.args.data, tt.args.address, tt.args.uri)
 		})
 	}
 }
 
 func TestCreateNFTAsset(t *testing.T) {
 	type args struct {
-		data Payload
-		uri  URI
+		data utils.Payload
+		uri  utils.URI
 	}
 	tests := []struct {
 		name string
@@ -145,14 +144,14 @@ func TestCreateNFTAsset(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			CreateNFTAsset(tt.args.data, tt.args.uri)
+			utils.CreateNFTAsset(tt.args.data, tt.args.uri)
 		})
 	}
 }
 
 func TestSendRequest(t *testing.T) {
 	type args struct {
-		uri          URI
+		uri          utils.URI
 		payloadBytes []byte
 	}
 	tests := []struct {
@@ -163,7 +162,7 @@ func TestSendRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			SendRequest(tt.args.uri, tt.args.payloadBytes)
+			utils.SendRequest(tt.args.uri, tt.args.payloadBytes)
 		})
 	}
 }
